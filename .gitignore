@@ -3,4 +3,5 @@
 build/
 dist/
 src/pynocchio.egg-info/
+__pycache__
 *.pyd

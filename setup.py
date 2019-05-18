@@ -70,7 +70,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='pynocchio',
-    version='0.1',
+    version='0.0.1',
     author='Alexander Larin',
     author_email='ekzebox@gmail.com',
     description='The pinocchio extension library',
@@ -79,5 +79,6 @@ setup(
     package_dir={'': 'src'},
     ext_modules=[CMakeExtension('pynocchio')],
     cmdclass=dict(build_ext=CMakeBuild),
+    test_suite='tests',
     zip_safe=False,
 )
