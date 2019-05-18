@@ -1,0 +1,6 @@
+.idea/
+.venv/
+build/
+dist/
+src/pynocchio.egg-info/
+*.pyd
