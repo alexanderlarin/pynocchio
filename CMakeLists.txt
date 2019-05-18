@@ -5,7 +5,7 @@ SET(SOURCE_DIR "src")
 
 # Tell cmake that headers are in alse in source_dir
 include_directories(${SOURCE_DIR})
-SET(SOURCES "${SOURCE_DIR}/math.cpp")
+SET(SOURCES "${SOURCE_DIR}/mesh.cpp")
 
 # Generate python module
 add_subdirectory(lib/pybind11)

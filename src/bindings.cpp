@@ -1,12 +1,12 @@
 #include <pybind11/pybind11.h>
-#include "math.hpp"
+#include "mesh.h"
 
 namespace py = pybind11;
 
 PYBIND11_MODULE(pynocchio, m)
 {
-    m.def("add", &add);
-    m.def("subtract", &subtract);
+    py::class_<Mesh>(m, "Mesh")
+        .def(py::init<const std::string &>());
 
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;
