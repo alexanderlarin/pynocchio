@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/stl_bind.h>
 
 #include "attachment.h"
 #include "mesh.h"
@@ -10,6 +11,9 @@
 
 namespace py = pybind11;
 
+PYBIND11_MAKE_OPAQUE(std::vector<MeshVertex>);
+PYBIND11_MAKE_OPAQUE(std::vector<MeshEdge>);
+
 PYBIND11_MODULE(pynocchio, m)
 {
 #ifdef VERSION_INFO
@@ -18,8 +22,20 @@ PYBIND11_MODULE(pynocchio, m)
     m.attr("__version__") = "dev";
 #endif
 
+    py::class_<MeshVertex>(m, "MeshVertex")
+        .def(py::init<>())
+        .def_readwrite("position", &MeshVertex::pos)
+        .def_readwrite("normal", &MeshVertex::normal);
+    py::bind_vector<std::vector<MeshVertex> >(m, "VectorMeshVertex");
+    py::class_<MeshEdge>(m, "MeshEdge")
+        .def(py::init<>())
+        .def_readwrite("vertex", &MeshEdge::vertex);
+    py::bind_vector<std::vector<MeshEdge> >(m, "VectorMeshEdge");
     py::class_<Mesh>(m, "Mesh")
-        .def(py::init<const std::string &>());
+        .def(py::init<>())
+        .def(py::init<const std::string &>())
+        .def_readwrite("vertices", &Mesh::vertices)
+        .def_readwrite("edges", &Mesh::edges);
 
     py::class_<Skeleton> skeleton(m, "Skeleton");
     skeleton

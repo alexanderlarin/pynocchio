@@ -7,8 +7,8 @@ class AutoRigTests(unittest.TestCase):
     def setUp(self):
         pass
 
+    @unittest.skip
     def test_data(self):
-        mesh = Mesh('./example/data/sveta.obj')
+        mesh = Mesh('./examples/data/sveta.obj')
         skeleton = HumanSkeleton()
         attach = auto_rig(skeleton, mesh)
-        print(len(attach.get_embedding()))
