@@ -9,6 +9,6 @@ class AutoRigTests(unittest.TestCase):
 
     @unittest.skip
     def test_data(self):
-        mesh = Mesh('./examples/data/sveta.obj')
+        mesh = Mesh('data/sveta.obj')
         skeleton = HumanSkeleton()
         attach = auto_rig(skeleton, mesh)
