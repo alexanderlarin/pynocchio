@@ -51,6 +51,13 @@ public:
 		double initialHeatWeight)
 		: embedding(match)
     {
+        // TODO: Authors of this library suppose that auto_rig mesh could be normalized implicitly
+        // TODO: but embedding should be de-normalized explicitly. I dont think so...
+        // TODO: hide normalize/de-normalize in library or make it explicitly? Workaround is to store denormalized embedding
+        embedding.resize(match.size());
+        for (int i = 0; i < (int)match.size(); i++)
+            embedding[i] = (match[i] - mesh.toAdd) / mesh.scale;
+
         int i, j;
         int nv = (int)mesh.vertices.size();
         //compute edges
