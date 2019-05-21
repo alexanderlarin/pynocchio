@@ -7,10 +7,12 @@
 #include "pinocchioApi.h"
 #include "skeleton.h"
 #include "vector.h"
+#include "transform.h"
 
 
 namespace py = pybind11;
 
+PYBIND11_MAKE_OPAQUE(std::vector<Transform<double> >);
 PYBIND11_MAKE_OPAQUE(std::vector<MeshVertex>);
 PYBIND11_MAKE_OPAQUE(std::vector<MeshEdge>);
 
@@ -22,15 +24,36 @@ PYBIND11_MODULE(pynocchio, m)
     m.attr("__version__") = "dev";
 #endif
 
+    py::class_<Vector<double, 3> >(m, "Vector3")
+        .def(py::init<double, double, double>())
+        .def("__getitem__", [](const Vector3 &v, int i) {
+            if (i >= v.size())
+                throw py::index_error();
+            return v[i];
+        })
+        .def("__setitem__", [](Vector3 &v, int i, double value) {
+            if (i >= v.size())
+                throw py::index_error();
+            v[i] = value;
+        })
+        .def("__len__", &Vector3::size);
+
+    py::class_<Transform<double> >(m, "Transform")
+        .def(py::init<>())
+        .def(py::init<Vector3>());
+    py::bind_vector<std::vector<Transform<double> > >(m, "VectorTransform");
+
     py::class_<MeshVertex>(m, "MeshVertex")
         .def(py::init<>())
         .def_readwrite("position", &MeshVertex::pos)
         .def_readwrite("normal", &MeshVertex::normal);
     py::bind_vector<std::vector<MeshVertex> >(m, "VectorMeshVertex");
+
     py::class_<MeshEdge>(m, "MeshEdge")
         .def(py::init<>())
         .def_readwrite("vertex", &MeshEdge::vertex);
     py::bind_vector<std::vector<MeshEdge> >(m, "VectorMeshEdge");
+    
     py::class_<Mesh>(m, "Mesh")
         .def(py::init<>())
         .def(py::init<const std::string &>())
@@ -50,23 +73,10 @@ PYBIND11_MODULE(pynocchio, m)
     py::class_<FileSkeleton>(m, "FileSkeleton", skeleton)
         .def(py::init<const std::string &>());
 
-    py::class_<Vector3>(m, "Vector3")
-        .def(py::init<double, double, double>())
-        .def("__getitem__", [](const Vector3 &v, int i) {
-            if (i >= v.size())
-                throw py::index_error();
-            return v[i];
-        })
-        .def("__setitem__", [](Vector3 &v, int i, double value) {
-            if (i >= v.size())
-                throw py::index_error();
-            v[i] = value;
-        })
-        .def("__len__", &Vector3::size);
-
     py::class_<Attachment>(m, "Attachment")
         .def(py::init<>())
-        .def_property_readonly("embedding", &Attachment::getEmbedding);
+        .def_property_readonly("embedding", &Attachment::getEmbedding)
+        .def("deform", &Attachment::deform);
 
     m.def("auto_rig", &autorig);
 }
