@@ -1,7 +1,9 @@
-.idea/
-.venv/
-build/
-dist/
-src/pynocchio.egg-info/
+.idea
+.venv
+.vscode
+pynocchio.egg-info
 __pycache__
 *.pyd
+
+build/
+dist/

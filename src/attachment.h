@@ -61,21 +61,23 @@ private:
 };
 template<class T> VisibilityTester *makeVisibilityTester(const T *tree) { return new VisTester<T>(tree); } //be sure to delete afterwards
 
-class AttachmentPrivate;
 
 class Attachment
 {
 public:
-    Attachment() : a(NULL) {}
-    Attachment(const Attachment &);
-    Attachment(const Mesh &mesh, const Skeleton &skeleton, const vector<Vector3> &match, const VisibilityTester *tester, double initialHeatWeight=1.);
-    virtual ~Attachment();
+    Attachment() { }
+    Attachment(const Mesh &mesh, const Skeleton &skeleton, const vector<Vector3> &match, 
+        const VisibilityTester *tester, double initialHeatWeight=1.);
+
+    Vector<double, -1> getWeights(int i) const { return this->weights[i]; }
+    vector<Vector3> getEmbedding() const { return embedding; };
 
     Mesh deform(const Mesh &mesh, const vector<Transform<> > &transforms) const;
-    Vector<double, -1> getWeights(int i) const;
-    vector<Vector3> getEmbedding() const;
+
 private:
-    AttachmentPrivate *a;
+    vector<Vector<double, -1> > weights;
+    vector<vector<pair<int, double> > > nzweights; //sparse representation
+    vector<Vector3> embedding;
 };
 
 #endif
