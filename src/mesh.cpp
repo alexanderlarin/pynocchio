@@ -26,10 +26,19 @@
 #include <algorithm>
 #include <unordered_map>
 
-Mesh::Mesh(const string &file)
-    : scale(1.)
+Mesh::Mesh(const vector<Vector3> &points, const vector<int> &triangles)
 {
-    int i;
+    vertices.reserve(points.size());
+    for_each(points.begin(), points.end(), [this](const Vector3 &v) { vertices.push_back(MeshVertex(v)); });
+
+    edges.reserve(triangles.size());
+    for_each(triangles.begin(), triangles.end(), [this](int idx) { edges.push_back(MeshEdge(idx)); });
+
+    complete();
+}
+
+Mesh::Mesh(const string &file)
+{
 #define OUT { vertices.clear(); edges.clear(); return; }
     ifstream obj(file.c_str());
     
@@ -59,14 +68,18 @@ Mesh::Mesh(const string &file)
         Debugging::out() << "I don't know what kind of file it is" << endl;
         return;
     }
-    
-    //reconstruct the rest of the information
+
+    complete();
+}
+
+void Mesh::complete() {
+     //reconstruct the rest of the information
     int verts = (int)vertices.size();
     
     if(verts == 0)
         return;
     
-    for(i = 0; i < (int)edges.size(); ++i) { //make sure all vertex indices are valid
+    for(int i = 0; i < (int)edges.size(); ++i) { //make sure all vertex indices are valid
         if(edges[i].vertex < 0 || edges[i].vertex >= verts) {
             Debugging::out() << "Error: invalid vertex index " << edges[i].vertex << endl;
             OUT;
@@ -74,15 +87,11 @@ Mesh::Mesh(const string &file)
     }
     
     fixDupFaces();
-    
-    computeTopology();
-    
-    if(integrityCheck())
-        Debugging::out() << "Successfully read " << file << ": " << vertices.size() << " vertices, " << edges.size() << " edges" << endl;
-    else
-        Debugging::out() << "Somehow read " << file << ": " << vertices.size() << " vertices, " << edges.size() << " edges" << endl;
-    
+    computeTopology();     
     computeVertexNormals();
+
+    if (!integrityCheck())
+        Debugging::out() << "Somehow create mesh: " << vertices.size() << " vertices, " << edges.size() << " edges" << endl;
 }
 
 void Mesh::computeTopology()

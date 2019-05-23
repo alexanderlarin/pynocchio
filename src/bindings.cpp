@@ -12,6 +12,8 @@
 
 namespace py = pybind11;
 
+PYBIND11_MAKE_OPAQUE(std::vector<Vector3>);
+PYBIND11_MAKE_OPAQUE(std::vector<int>);
 PYBIND11_MAKE_OPAQUE(std::vector<Transform<double> >);
 PYBIND11_MAKE_OPAQUE(std::vector<MeshVertex>);
 PYBIND11_MAKE_OPAQUE(std::vector<MeshEdge>);
@@ -24,7 +26,7 @@ PYBIND11_MODULE(pynocchio, m)
     m.attr("__version__") = "dev";
 #endif
 
-    py::class_<Vector<double, 3> >(m, "Vector3")
+    py::class_<Vector3>(m, "Vector3")
         .def(py::init<double, double, double>())
         .def("__getitem__", [](const Vector3 &v, int i) {
             if (i >= v.size())
@@ -37,6 +39,8 @@ PYBIND11_MODULE(pynocchio, m)
             v[i] = value;
         })
         .def("__len__", &Vector3::size);
+    py::bind_vector<std::vector<Vector3> >(m, "Points");
+    py::bind_vector<std::vector<int> >(m, "Indices");
 
     py::class_<Transform<double> >(m, "Transform")
         .def(py::init<>())
@@ -59,7 +63,7 @@ PYBIND11_MODULE(pynocchio, m)
     py::class_<Mesh>(m, "Mesh")
         .def(py::init<>())
         .def(py::init<const std::string &>())
-        .def(py::init<const std::vector<MeshVertex> &, const std::vector<MeshEdge> &>())
+        .def(py::init<const std::vector<Vector3> &, const std::vector<int> &>())
         .def_readwrite("vertices", &Mesh::vertices)
         .def_readwrite("edges", &Mesh::edges)
         .def("calculate_normals", &Mesh::computeVertexNormals);

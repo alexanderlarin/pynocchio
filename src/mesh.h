@@ -47,9 +47,7 @@ struct MeshEdge
 class Mesh {
 public:
     Mesh() { }
-    Mesh(const vector<MeshVertex> &points, const vector<MeshEdge> &triangles) 
-        : vertices(points), edges(triangles) { }
-    
+    Mesh(const vector<Vector3> &points, const vector<int> &triangles);
     Mesh(const string &file);
 
     bool integrityCheck() const;
@@ -60,6 +58,7 @@ public:
     void writeObj(const string &filename) const;
     
 private:
+    void complete();
     void readObj(istream &strm);
     void readOff(istream &strm);
     void readPly(istream &strm);

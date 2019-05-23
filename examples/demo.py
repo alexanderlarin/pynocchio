@@ -28,7 +28,6 @@ class Animation:
                 self._transform_index = 0 \
                     if self._transform_index + 1 == len(self._translates) else self._transform_index + 1
         self._translates[self._transform_index][self._axis] = value
-        print(self._translates)
         return VectorTransform([Transform(Vector3(t[0], t[1], t[2])) for t in self._translates])
 
 

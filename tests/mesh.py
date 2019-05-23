@@ -1,6 +1,6 @@
 import unittest
 
-from pynocchio import Mesh, MeshVertex, MeshEdge, Vector3, VectorMeshVertex, VectorMeshEdge
+from pynocchio import Mesh, MeshVertex, MeshEdge, Vector3, Points, Indices
 
 
 class MeshTest(unittest.TestCase):
@@ -21,9 +21,8 @@ class MeshTest(unittest.TestCase):
             self.assertNotEqual(sum(vertex.normal), 0.)
 
     def test_from_data(self):
-        v = MeshVertex(Vector3(1., 2., 3.))
-        e = MeshEdge(0)
-        mesh = Mesh(VectorMeshVertex([v]), VectorMeshEdge([e]))
+        v = Vector3(1., 2., 3.)
+        mesh = Mesh(Points([v]), Indices([0]))
         self.assertIsNotNone(mesh)
 
     def test_mesh_vertex(self):
