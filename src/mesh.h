@@ -26,25 +26,30 @@
 
 struct MeshVertex
 {
-    MeshVertex() : edge(-1) {}
+    MeshVertex() {}
+    MeshVertex(const Vector3 &position) : pos(position) {}
     
     Vector3 pos;
     Vector3 normal;
-    int edge; //an edge such that edge->prev->vertex is this
+    int edge = -1; //an edge such that edge->prev->vertex is this
 };
 
 struct MeshEdge
 {
-    MeshEdge() : vertex(-1), prev(-1), twin(-1) {}
+    MeshEdge() : vertex(-1) {}
+    MeshEdge(int vert) : vertex(vert) { }
     
     int vertex; //the vertex the edge points to--the start vertex is prev->vertex
-    int prev; //ccw, next is prev->prev
-    int twin;
+    int prev = -1; //ccw, next is prev->prev
+    int twin = -1;
 };
 
 class Mesh {
 public:
-    Mesh() : scale(1.) {}
+    Mesh() { }
+    Mesh(const vector<MeshVertex> &points, const vector<MeshEdge> &triangles) 
+        : vertices(points), edges(triangles) { }
+    
     Mesh(const string &file);
 
     bool integrityCheck() const;
@@ -68,7 +73,7 @@ public: //data
     vector<MeshEdge> edges; //halfEdges, really
 
     Vector3 toAdd;
-    double scale;
+    double scale = 1.;
 };
 
 #endif

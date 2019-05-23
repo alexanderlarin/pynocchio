@@ -1,6 +1,6 @@
 import unittest
 
-from pynocchio import Mesh
+from pynocchio import Mesh, MeshVertex, MeshEdge, Vector3, VectorMeshVertex, VectorMeshEdge
 
 
 class MeshTest(unittest.TestCase):
@@ -19,3 +19,25 @@ class MeshTest(unittest.TestCase):
         self.assertIsNotNone(mesh)
         for vertex in mesh.vertices:
             self.assertNotEqual(sum(vertex.normal), 0.)
+
+    def test_from_data(self):
+        v = MeshVertex(Vector3(1., 2., 3.))
+        e = MeshEdge(0)
+        mesh = Mesh(VectorMeshVertex([v]), VectorMeshEdge([e]))
+        self.assertIsNotNone(mesh)
+
+    def test_mesh_vertex(self):
+        v = MeshVertex()
+        self.assertEqual(v.position[0], 0.)
+        self.assertEqual(v.position[1], 0.)
+        self.assertEqual(v.position[2], 0.)
+        v = MeshVertex(Vector3(1., 2., 3.))
+        self.assertEqual(v.position[0], 1.)
+        self.assertEqual(v.position[1], 2.)
+        self.assertEqual(v.position[2], 3.)
+
+    def test_mesh_edge(self):
+        e = MeshEdge()
+        self.assertEqual(e.vertex, -1)
+        e = MeshEdge(100)
+        self.assertEqual(e.vertex, 100)

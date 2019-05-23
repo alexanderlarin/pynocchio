@@ -40,23 +40,26 @@ PYBIND11_MODULE(pynocchio, m)
 
     py::class_<Transform<double> >(m, "Transform")
         .def(py::init<>())
-        .def(py::init<Vector3>());
+        .def(py::init<const Vector3 &>());
     py::bind_vector<std::vector<Transform<double> > >(m, "VectorTransform");
 
     py::class_<MeshVertex>(m, "MeshVertex")
         .def(py::init<>())
+        .def(py::init<const Vector3 &>())
         .def_readwrite("position", &MeshVertex::pos)
         .def_readwrite("normal", &MeshVertex::normal);
     py::bind_vector<std::vector<MeshVertex> >(m, "VectorMeshVertex");
 
     py::class_<MeshEdge>(m, "MeshEdge")
         .def(py::init<>())
+        .def(py::init<int>())
         .def_readwrite("vertex", &MeshEdge::vertex);
     py::bind_vector<std::vector<MeshEdge> >(m, "VectorMeshEdge");
     
     py::class_<Mesh>(m, "Mesh")
         .def(py::init<>())
         .def(py::init<const std::string &>())
+        .def(py::init<const std::vector<MeshVertex> &, const std::vector<MeshEdge> &>())
         .def_readwrite("vertices", &Mesh::vertices)
         .def_readwrite("edges", &Mesh::edges)
         .def("calculate_normals", &Mesh::computeVertexNormals);
