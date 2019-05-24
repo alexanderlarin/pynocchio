@@ -73,6 +73,7 @@ PYBIND11_MODULE(pynocchio, m)
     skeleton
         .def(py::init<>())
         .def("scale", &Skeleton::scale)
+        .def_property_readonly("vertices", &Skeleton::fVerts)
         .def_property_readonly("parent_indices", &Skeleton::fPrev);
 
     py::class_<HumanSkeleton>(skeletons_module, "HumanSkeleton", skeleton)

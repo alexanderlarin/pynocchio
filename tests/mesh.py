@@ -21,8 +21,15 @@ class MeshTest(unittest.TestCase):
             self.assertNotEqual(sum(vertex.normal), 0.)
 
     def test_from_data(self):
-        v = Vector3(1., 2., 3.)
-        mesh = Mesh(Points([v]), Indices([0]))
+        points = Points()
+        points.append(Vector3(0., 0., 0.))
+        points.append(Vector3(1., 1., 1.))
+        points.append(Vector3(1., 1., 0.))
+        indices = Indices()
+        indices.append(0)
+        indices.append(1)
+        indices.append(2)
+        mesh = Mesh(points, indices)
         self.assertIsNotNone(mesh)
 
     def test_mesh_vertex(self):

@@ -29,6 +29,7 @@ public:
     const PtGraph &fGraph() const { return fGraphV; }
     const vector<int> &fPrev() const { return fPrevV; }
     const vector<int> &fSym() const { return fSymV; }
+    const vector<Vector3> &fVerts() const { return fGraphV.verts; }
     
     const PtGraph &cGraph() const { return cGraphV; }
     const vector<int> &cPrev() const { return cPrevV; }
