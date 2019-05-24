@@ -68,16 +68,17 @@ PYBIND11_MODULE(pynocchio, m)
         .def_readwrite("edges", &Mesh::edges)
         .def("calculate_normals", &Mesh::computeVertexNormals);
 
-    py::class_<Skeleton> skeleton(m, "Skeleton");
+    py::module skeletons_module = m.def_submodule("skeletons");
+    py::class_<Skeleton> skeleton(skeletons_module, "Skeleton");
     skeleton
         .def(py::init<>())
         .def("scale", &Skeleton::scale)
         .def_property_readonly("parent_indices", &Skeleton::fPrev);
 
-    py::class_<HumanSkeleton>(m, "HumanSkeleton", skeleton)
+    py::class_<HumanSkeleton>(skeletons_module, "HumanSkeleton", skeleton)
         .def(py::init<>());
 
-    py::class_<FileSkeleton>(m, "FileSkeleton", skeleton)
+    py::class_<FileSkeleton>(skeletons_module, "FileSkeleton", skeleton)
         .def(py::init<const std::string &>());
 
     py::class_<Attachment>(m, "Attachment")

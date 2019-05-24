@@ -2,7 +2,8 @@ import signal
 
 import pyglet
 from pyglet.gl import *
-from pynocchio import auto_rig, Mesh, HumanSkeleton, Vector3, Transform, VectorTransform
+from pynocchio import auto_rig, Mesh, Vector3, Transform, VectorTransform
+from pynocchio import skeletons
 
 
 class Animation:
@@ -78,7 +79,7 @@ class Bones:
 
 
 human_mesh = Mesh('data/sveta.obj')
-human_skeleton = HumanSkeleton()
+human_skeleton = skeletons.HumanSkeleton()
 human_skeleton.scale(0.7)
 attach = auto_rig(human_skeleton, human_mesh)
 

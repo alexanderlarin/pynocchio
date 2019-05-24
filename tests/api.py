@@ -1,6 +1,7 @@
 import unittest
 
-from pynocchio import auto_rig, HumanSkeleton, Mesh
+from pynocchio import auto_rig, Mesh
+from pynocchio import skeletons
 
 
 class AutoRigTests(unittest.TestCase):
@@ -10,5 +11,5 @@ class AutoRigTests(unittest.TestCase):
     @unittest.skip
     def test_data(self):
         mesh = Mesh('data/sveta.obj')
-        skeleton = HumanSkeleton()
+        skeleton = skeletons.HumanSkeleton()
         attach = auto_rig(skeleton, mesh)
