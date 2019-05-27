@@ -23,9 +23,7 @@
 #include "graphutils.h"
 
 class Skeleton {
-public:
-    Skeleton() {}
-    
+public:    
     const PtGraph &fGraph() const { return fGraphV; }
     const vector<int> &fPrev() const { return fPrevV; }
     const vector<int> &fSym() const { return fSymV; }
@@ -47,6 +45,7 @@ public:
     void scale(double factor);
     
 protected:
+    Skeleton() {}
     void initCompressed();
     
     //help for creation

@@ -18,6 +18,15 @@ PYBIND11_MAKE_OPAQUE(std::vector<Transform<double> >);
 PYBIND11_MAKE_OPAQUE(std::vector<MeshVertex>);
 PYBIND11_MAKE_OPAQUE(std::vector<MeshEdge>);
 
+class SkeletonBase : public Skeleton {
+public:
+    using Skeleton::makeJoint;
+    using Skeleton::makeSymmetric;
+    using Skeleton::initCompressed;
+    using Skeleton::setFoot;
+    using Skeleton::setFat;
+};
+
 PYBIND11_MODULE(pynocchio, m)
 {
 #ifdef VERSION_INFO
@@ -71,12 +80,37 @@ PYBIND11_MODULE(pynocchio, m)
     py::module skeletons_module = m.def_submodule("skeletons");
     py::class_<Skeleton> skeleton(skeletons_module, "Skeleton");
     skeleton
-        .def(py::init<>())
-        .def("scale", &Skeleton::scale)
         .def_property_readonly("vertices", &Skeleton::fVerts)
-        .def_property_readonly("parent_indices", &Skeleton::fPrev);
+        .def_property_readonly("parent_indices", &Skeleton::fPrev)
+        .def("scale", &Skeleton::scale);
+
+    py::class_<SkeletonBase>(skeletons_module, "SkeletonBase", skeleton)
+        .def(py::init<>())
+        .def("_make_joint", 
+            static_cast<void (Skeleton::*)(const string &, const Vector3 &, const string &)>(&SkeletonBase::makeJoint),
+            py::arg("name"), py::arg("position"), py::arg("previous") = py::str())
+        .def("_make_symmetric", 
+            static_cast<void (Skeleton::*)(const string &, const string &)>(&SkeletonBase::makeSymmetric),
+            py::arg("name_1"), py::arg("name_2"))
+        .def("_make_compressed", 
+            static_cast<void (Skeleton::*)()>(&SkeletonBase::initCompressed))
+        .def("_set_foot", 
+            static_cast<void (Skeleton::*)(const string &)>(&SkeletonBase::setFoot),
+            py::arg("name"))
+        .def("_set_fat", 
+            static_cast<void (Skeleton::*)(const string &)>(&SkeletonBase::setFat),
+            py::arg("name"));
 
     py::class_<HumanSkeleton>(skeletons_module, "HumanSkeleton", skeleton)
+        .def(py::init<>());
+
+    py::class_<QuadSkeleton>(skeletons_module, "QuadSkeleton", skeleton)
+        .def(py::init<>());
+
+    py::class_<HorseSkeleton>(skeletons_module, "HorseSkeleton", skeleton)
+        .def(py::init<>());
+
+    py::class_<CentaurSkeleton>(skeletons_module, "CentaurSkeleton", skeleton)
         .def(py::init<>());
 
     py::class_<FileSkeleton>(skeletons_module, "FileSkeleton", skeleton)
