@@ -16,8 +16,10 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include <algorithm>
 #include "pinocchioApi.h"
 #include "debugging.h"
+
 
 struct FP //information for penalty functions
 {

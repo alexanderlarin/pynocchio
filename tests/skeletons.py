@@ -28,7 +28,7 @@ class SkeletonsTest(unittest.TestCase):
     def test_custom_skeleton(self):
         class CustomSkeleton(skeletons.SkeletonBase):
             def __init__(self):
-                super().__init__()
+                super(CustomSkeleton, self).__init__()
                 self._make_joint('shoulders', Vector3(0., 0.5, 0.))
                 self._make_joint('back', Vector3(0., 0.15, 0.), 'shoulders')
                 self._make_joint('hips', Vector3(0., 0., 0.), 'back')

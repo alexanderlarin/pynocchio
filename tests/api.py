@@ -4,11 +4,8 @@ from pynocchio import auto_rig, Mesh
 from pynocchio import skeletons
 
 
+@unittest.skip
 class AutoRigTests(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    @unittest.skip
     def test_data(self):
         mesh = Mesh('data/sveta.obj')
         skeleton = skeletons.HumanSkeleton()

@@ -20,6 +20,7 @@
 #define VECTOR_H
 
 #include <iostream>
+#include <algorithm>
 #include <functional>
 #include <vector>
 #include <numeric>

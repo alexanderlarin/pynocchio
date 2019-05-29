@@ -16,9 +16,12 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
+#include <algorithm>
 #include "pinocchioApi.h"
 #include "deriv.h"
 #include "debugging.h"
+
 
 //fits mesh inside unit cube, makes sure there's exactly one connected component
 Mesh  prepareMesh(const Mesh &m)
