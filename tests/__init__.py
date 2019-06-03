@@ -1,3 +1,3 @@
 import pynocchio
 
-assert pynocchio.__version__ == '0.0.1'
+assert pynocchio.__version__ == '0.0.3'
