@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+import io
 import os
 import re
 import sys
@@ -69,7 +70,7 @@ class CMakeBuild(build_ext):
 
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(this_directory, 'README.rst'), encoding='utf-8') as f:
+with io.open(os.path.join(this_directory, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
