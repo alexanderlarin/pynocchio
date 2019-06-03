@@ -68,14 +68,19 @@ class CMakeBuild(build_ext):
         print()  # Add an empty line for cleaner output
 
 
+this_directory = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(this_directory, 'README.rst'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name='pynocchio',
     version='0.0.2',
     author='Alexander Larin',
     author_email='ekzebox@gmail.com',
     description='The pinocchio extension library',
+    long_description=long_description,
+    long_description_content_type='text/x-rst',
     url='https://github.com/alexanderlarin/pynocchio',
-    long_description='',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     ext_modules=[CMakeExtension('pynocchio')],
