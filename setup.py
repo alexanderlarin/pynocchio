@@ -75,7 +75,7 @@ with io.open(os.path.join(this_directory, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='pynocchio',
-    version='0.0.3',
+    version='0.0.4',
     author='Alexander Larin',
     author_email='ekzebox@gmail.com',
     description='The pinocchio extension library',
