@@ -53,7 +53,10 @@ PYBIND11_MODULE(pynocchio, m)
 
     py::class_<Transform<double> >(m, "Transform")
         .def(py::init<>())
-        .def(py::init<const Vector3 &>());
+        .def(py::init<const Vector3 &>())
+        .def("__mul__", [](const Transform<double> &t, const Vector3 &v) {
+            return t * v;
+        });
     py::bind_vector<std::vector<Transform<double> > >(m, "VectorTransform");
 
     py::class_<MeshVertex>(m, "MeshVertex")

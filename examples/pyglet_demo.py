@@ -2,7 +2,7 @@ import signal
 
 import pyglet
 from pyglet.gl import *
-from pynocchio import auto_rig, Mesh, Vector3, Transform, VectorTransform
+from pynocchio import auto_rig, Mesh, Vector3, Transform, VectorTransform, Points
 from pynocchio import skeletons
 
 
@@ -36,23 +36,22 @@ class Model:
     def __init__(self, mesh):
         self._batch = pyglet.graphics.Batch()
         vertices = [edge.vertex for edge in mesh.edges]
-        positions = []
-        for vertex in mesh.vertices:
-            position = vertex.position
-            positions.append(position[0])
-            positions.append(position[1])
-            positions.append(position[2])
+        positions = Model.get_positions(mesh)
         self._vertex_list = self._batch.add_indexed(len(mesh.vertices), GL_TRIANGLES, None,
                                                     vertices, ('v3d', tuple(positions)))
 
-    def update(self, mesh):
+    @staticmethod
+    def get_positions(mesh):
         positions = []
         for vertex in mesh.vertices:
             position = vertex.position
             positions.append(position[0])
             positions.append(position[1])
             positions.append(position[2])
-        self._vertex_list.vertices = positions
+        return positions
+
+    def update(self, mesh):
+        self._vertex_list.vertices = Model.get_positions(mesh)
 
     def draw(self):
         self._batch.draw()
@@ -61,6 +60,11 @@ class Model:
 class Bones:
     def __init__(self, skeleton, embedding):
         self._batch = pyglet.graphics.Batch()
+        positions = Bones.get_positions(skeleton, embedding)
+        self._vertex_list = self._batch.add((len(skeleton.parent_indices) - 1) * 2, GL_LINES, None, ('v3d', positions))
+
+    @staticmethod
+    def get_positions(skeleton, embedding):
         positions = []
         for i in range(1, len(skeleton.parent_indices)):
             j = skeleton.parent_indices[i]
@@ -72,7 +76,10 @@ class Bones:
             positions.append(v2[0])
             positions.append(v2[1])
             positions.append(v2[2])
-        self._batch.add((len(skeleton.parent_indices) - 1) * 2, GL_LINES, None, ('v3d', positions))
+        return positions
+
+    def update(self, skeleton, embedding):
+        self._vertex_list.vertices = Bones.get_positions(skeleton, embedding)
 
     def draw(self):
         self._batch.draw()
@@ -95,9 +102,16 @@ def setup():
 
 
 def update(dt):
-    mesh = attach.deform(human_mesh, animation.step())
-    global model
-    model.update(mesh)
+    transforms = animation.step()
+
+    mesh_transformed = attach.deform(human_mesh, transforms)
+    model.update(mesh_transformed)
+
+    embedding_transformed = Points()
+    embedding_transformed.append(attach.embedding[0])
+    for i in range(1, len(transforms)):
+        embedding_transformed.append(transforms[i - 1] * attach.embedding[i])
+    bones.update(human_skeleton, embedding_transformed)
 
 
 @window.event
@@ -106,8 +120,8 @@ def on_draw():
     glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
     glColor3f(1., 1., 1.)
     model.draw()
-    # glColor3f(0., .5, 0.)
-    # bones.draw()
+    glColor3f(0., .5, 0.)
+    bones.draw()
 
 
 pyglet.clock.schedule_interval(update, 1. / 60)
